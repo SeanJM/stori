@@ -96,21 +96,24 @@ var store = new _index2.default();
     var isSet = [false, false, false];
 
     store.on("a", function () {
-      isSet[0] = true;
+      isSet[0] = !isSet[0];
     });
 
     store.on("a.b", function () {
-      isSet[1] = true;
+      isSet[1] = !isSet[1];
     });
 
     store.on("a.b.c", function () {
-      isSet[2] = true;
+      isSet[2] = !isSet[2];
     });
 
     store.set({
       a: {
         b: {
           c: "d"
+        },
+        e: {
+          f: "g"
         }
       }
     });
@@ -332,11 +335,17 @@ Store.prototype.off = function (path, callback) {
   return this;
 };
 
-Store.prototype.trigger = function (path) {
+Store.prototype.triggerPaths = function (paths) {
+  var done = {};
   var temp = void 0;
-  for (var i = path.length; i > 0; i--) {
-    temp = path.slice(0, i);
-    this.__bus.trigger(temp.join("."), (0, _get2.default)(this, temp));
+  for (var i = 0, n = paths.length; i < n; i++) {
+    for (var x = paths[i].length; x > 0; x--) {
+      temp = paths[i].slice(0, x);
+      if (!done[temp]) {
+        done[temp] = true;
+        this.__bus.trigger(temp.join("."), (0, _get2.default)(this, temp));
+      }
+    }
   }
   return this;
 };
@@ -351,9 +360,9 @@ Store.prototype.set = function (object) {
       throw new Error("[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name.");
     }
     (0, _set2.default)(this, paths[i], value);
-    this.trigger(paths[i]);
   }
 
+  this.triggerPaths(paths);
   this.save();
   return this;
 };

@@ -20,21 +20,24 @@ tinyTest((test, load) => {
       let isSet = [ false, false, false ];
 
       store.on("a", () => {
-        isSet[0] = true;
+        isSet[0] = !isSet[0];
       });
 
       store.on("a.b", () => {
-        isSet[1] = true;
+        isSet[1] = !isSet[1];
       });
 
       store.on("a.b.c", () => {
-        isSet[2] = true;
+        isSet[2] = !isSet[2];
       });
 
       store.set({
         a : {
           b : {
             c : "d"
+          },
+          e : {
+            f : "g"
           }
         }
       });

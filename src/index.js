@@ -55,11 +55,17 @@ Store.prototype.off = function (path, callback) {
   return this;
 };
 
-Store.prototype.trigger = function (path) {
-  let temp;
-  for (var i = path.length; i > 0; i--) {
-    temp = path.slice(0, i);
-    this.__bus.trigger(temp.join("."), get(this, temp));
+Store.prototype.triggerPaths = function (paths) {
+  const done = {};
+  let   temp;
+  for (var i = 0, n = paths.length; i < n; i++) {
+    for (var x = paths[i].length; x > 0; x--) {
+      temp = paths[i].slice(0, x);
+      if (!done[temp]) {
+        done[temp] = true;
+        this.__bus.trigger(temp.join("."), get(this, temp));
+      }
+    }
   }
   return this;
 };
@@ -76,9 +82,9 @@ Store.prototype.set = function (object) {
       );
     }
     set(this, paths[i], value);
-    this.trigger(paths[i]);
   }
 
+  this.triggerPaths(paths);
   this.save();
   return this;
 };
