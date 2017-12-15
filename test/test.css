@@ -1,0 +1,65 @@
+body {
+  padding     : 10px 20px;
+  background  : #000;
+  font-family : "source code pro",
+                "monaco",
+                "system",
+                "monospace";
+}
+
+.test {
+  position   : relative;
+  width      : 600px;
+  min-height : 26px;
+  color      : #fff;
+}
+
+.test_title {
+  position      : absolute;
+  top           : 0;
+  left          : 0;
+  width         : 100%;
+  border-bottom : 1px dotted #b6b6b6;
+  font-size     : 14px;
+  line-height   : 26px;
+}
+
+.test_result_indicator {
+  position      : absolute;
+  top           : 8px;
+  right         : 0;
+  width         : 8px;
+  height        : 8px;
+  border-radius : 50%;
+}
+
+.test--is-valid .test_result_indicator {
+  background : green;
+}
+
+.test--is-invalid .test_result_indicator {
+  background : red;
+}
+
+.test_expectation_expected,
+.test_expectation_received {
+  font-size   : 12px;
+  line-height : 26px;
+}
+
+.test_expectation {
+  display    : inline-block;
+  margin-top : 32px;
+}
+
+.test_expectation_title {
+  color       : red;
+  font-size   : 14px;
+  font-weight : bold;
+  line-height : 20px;
+}
+
+.error_message {
+  color     : red;
+  font-size : 12px;
+}

@@ -1,0 +1,43 @@
+{
+  "name": "stori",
+  "version": "1.0.0",
+  "description": "A storage component with emitters and listeners",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --watch",
+    "build": "NODE_ENV=production webpack",
+    "test": "node test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeanJM/stori.git"
+  },
+  "keywords": [
+    "storage",
+    "emitter",
+    "subscriber",
+    "easy",
+    "simple"
+  ],
+  "author": "Sean J. MacIsaac <seanjmacisaac@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SeanJM/stori/issues"
+  },
+  "homepage": "https://github.com/SeanJM/stori#readme",
+  "dependencies": {
+    "babel-env": "^2.4.1"
+  },
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "el-lite": "^1.25.2",
+    "eslint": "^4.13.1",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "tiny-test": "^0.9.4",
+    "uglifyjs-webpack-plugin": "^1.1.4",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
+  }
+}
