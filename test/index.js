@@ -15,6 +15,17 @@ tinyTest((test, load) => {
       return "this";
     });
 
+  test("Set (false)")
+    .this(function () {
+      store.set({
+        isFalse : false
+      });
+      return store.isFalse;
+    })
+    .isEqual(() => {
+      return false;
+    });
+
   test("Set (OnSet)")
     .this(function () {
       let isSet = [ false, false, false ];

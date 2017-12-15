@@ -92,6 +92,15 @@ var store = new _index2.default();
     return "this";
   });
 
+  test("Set (false)").this(function () {
+    store.set({
+      isFalse: false
+    });
+    return store.isFalse;
+  }).isEqual(function () {
+    return false;
+  });
+
   test("Set (OnSet)").this(function () {
     var isSet = [false, false, false];
 
@@ -180,7 +189,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function log(result) {
   var a = (0, _elLite2.default)({ class: "test" }, [(0, _elLite2.default)({ ref: "title", class: "test_title" }, [result.title]), (0, _elLite2.default)({ ref: "result", class: "test_result" }, [(0, _elLite2.default)({ class: "test_result_indicator" })])]);
 
-  var d = (0, _elLite2.default)({ class: "test_expectation" }, [(0, _elLite2.default)({ class: "test_expectation_title" }, ["Expected"]), (0, _elLite2.default)({ class: "test_expectation_expected" }, [result.value[1]]), (0, _elLite2.default)({ class: "test_expectation_received" }, [result.value[0]])]);
+  var d = (0, _elLite2.default)({ class: "test_expectation" }, [(0, _elLite2.default)({ class: "test_expectation_title" }, ["Expected"]), (0, _elLite2.default)({ class: "test_expectation_expected" }, [result.value[1]]), (0, _elLite2.default)({ class: "test_expectation_title" }, ["Received"]), (0, _elLite2.default)({ class: "test_expectation_received" }, [result.value[0]])]);
 
   if (result.isValid) {
     a.addClass("test--is-valid");
@@ -313,8 +322,8 @@ function Store(props) {
   for (; window.localStorage.key(i); i += 1) {
     key = window.localStorage.key(i);
     value = window.localStorage.getItem(key);
-    parsed = JSON.parse(value);
     if (value !== "undefined") {
+      parsed = JSON.parse(value);
       cache[key] = parsed;
     }
   }
@@ -494,7 +503,7 @@ function get(target, path) {
   var t = target;
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
   for (var i = 0, n = p.length; i < n; i++) {
-    if (!t[p[i]]) {
+    if (typeof t[p[i]] === "undefined") {
       return undefined;
     }
     t = t[p[i]];

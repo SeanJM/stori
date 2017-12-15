@@ -11,6 +11,7 @@ function log(result) {
   const d = el({ class : "test_expectation" }, [
     el({ class : "test_expectation_title" }, [ "Expected"]),
     el({ class : "test_expectation_expected" }, [ result.value[1] ]),
+    el({ class : "test_expectation_title" }, [ "Received"]),
     el({ class : "test_expectation_received" }, [ result.value[0] ])
   ]);
 

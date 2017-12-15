@@ -14,22 +14,31 @@ body {
   color      : #fff;
 }
 
+.test + .test {
+  margin-top : 3px;
+}
+
 .test_title {
   position      : absolute;
   top           : 0;
   left          : 0;
   width         : 100%;
-  border-bottom : 1px dotted #b6b6b6;
-  font-size     : 14px;
+  border-bottom : 1px dotted #969696;
+  font-size     : 13px;
   line-height   : 26px;
+}
+
+.test--is-invalid .test_title {
+  border-color : red;
+  color        : red;
 }
 
 .test_result_indicator {
   position      : absolute;
-  top           : 8px;
-  right         : 0;
-  width         : 8px;
-  height        : 8px;
+  top           : 7px;
+  right         : 6px;
+  width         : 10px;
+  height        : 10px;
   border-radius : 50%;
 }
 

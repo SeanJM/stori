@@ -21,8 +21,8 @@ function Store(props) {
   for (; window.localStorage.key(i); i += 1) {
     key    = window.localStorage.key(i);
     value  = window.localStorage.getItem(key);
-    parsed = JSON.parse(value);
     if (value !== "undefined") {
+      parsed = JSON.parse(value);
       cache[key] = parsed;
     }
   }
