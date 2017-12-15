@@ -32,7 +32,7 @@ Bus.prototype.on = function (name, callback) {
 
 Bus.prototype.trigger = function (name, value) {
   const nameLower = name.toLowerCase().trim();
-  const list      = (this.subscribers[nameLower] || []);
+  const list      = (this.subscribers[nameLower] || []).slice();
   for (var i = 0, n = list.length; i < n; i++) {
     list[i].call(this.target, value);
   }
