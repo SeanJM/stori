@@ -51,5 +51,7 @@ module.exports = [{
         presets: [ "env"]
       }
     }],
-  }
+  },
+
+  devtool : !IS_PRODUCTION ? "source-map" : undefined,
 }];

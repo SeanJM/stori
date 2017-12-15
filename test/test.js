@@ -35,11 +35,13 @@ function Test(title) {
   })
     .then(() => this.from())
     .then(res => {
-      this.value[0] = res.toString();
+      res = typeof res === "undefined" ? "undefined" : res.toString();
+      this.value[0] = res;
     })
     .then(()  => this.to())
     .then(res => {
-      this.value[1] = res.toString();
+      res = typeof res === "undefined" ? "undefined" : res.toString();
+      this.value[1] = res;
     })
     .then(() => { this.isValid = this.value[0] === this.value[1]; })
     .catch(err => {

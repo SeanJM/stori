@@ -151,6 +151,16 @@ var store = new _index2.default();
     return "d";
   });
 
+  test("Get (undefined)").this(function () {
+    store.set({
+      a: "d"
+    });
+
+    return store.get(["a", "b", "c"]);
+  }).isEqual(function () {
+    return undefined;
+  });
+
   load();
 });
 
@@ -195,11 +205,13 @@ function Test(title) {
   }).then(function () {
     return _this.from();
   }).then(function (res) {
-    _this.value[0] = res.toString();
+    res = typeof res === "undefined" ? "undefined" : res.toString();
+    _this.value[0] = res;
   }).then(function () {
     return _this.to();
   }).then(function (res) {
-    _this.value[1] = res.toString();
+    res = typeof res === "undefined" ? "undefined" : res.toString();
+    _this.value[1] = res;
   }).then(function () {
     _this.isValid = _this.value[0] === _this.value[1];
   }).catch(function (err) {
@@ -449,16 +461,21 @@ module.exports = Bus;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 exports.default = set;
 function set(target, path, value) {
   var t = target;
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
+
   for (var i = 0, n = p.length - 1; i < n; i++) {
-    if (!t[p[i]]) {
+    if (!t[p[i]] || i < n - 1 && _typeof(t[p[i]]) !== "object") {
       t[p[i]] = {};
     }
     t = t[p[i]];
   }
+
   t[p.slice(-1)[0]] = value;
 }
 
@@ -478,7 +495,7 @@ function get(target, path) {
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
   for (var i = 0, n = p.length; i < n; i++) {
     if (!t[p[i]]) {
-      t[p[i]] = {};
+      return undefined;
     }
     t = t[p[i]];
   }

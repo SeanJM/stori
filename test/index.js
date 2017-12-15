@@ -80,5 +80,17 @@ tinyTest((test, load) => {
       return "d";
     });
 
+  test("Get (undefined)")
+    .this(function () {
+      store.set({
+        a : "d"
+      });
+
+      return store.get([ "a", "b", "c" ]);
+    })
+    .isEqual(() => {
+      return undefined;
+    });
+
   load();
 });
