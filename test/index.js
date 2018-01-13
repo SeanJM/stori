@@ -103,5 +103,25 @@ tinyTest((test, load) => {
       return undefined;
     });
 
+  test("Set (merge values)")
+    .this(function () {
+      store.set({
+        a : {
+          b : true
+        }
+      });
+
+      store.set({
+        a : {
+          c : true
+        }
+      });
+
+      return store.a.b && store.a.c;
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });

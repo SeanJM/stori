@@ -170,6 +170,24 @@ var store = new _index2.default();
     return undefined;
   });
 
+  test("Set (merge values)").this(function () {
+    store.set({
+      a: {
+        b: true
+      }
+    });
+
+    store.set({
+      a: {
+        c: true
+      }
+    });
+
+    return store.a.b && store.a.c;
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -479,7 +497,7 @@ function set(target, path, value) {
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
-    if (!t[p[i]] || i < n - 1 && _typeof(t[p[i]]) !== "object") {
+    if (_typeof(t[p[i]]) !== "object") {
       t[p[i]] = {};
     }
     t = t[p[i]];
@@ -543,3 +561,4 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
