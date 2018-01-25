@@ -123,5 +123,23 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("Set (nulls)")
+    .this(function () {
+      store.set({
+        a : null
+      });
+
+      store.set({
+        a : {
+          c : true
+        }
+      });
+
+      return store.a.c;
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });
