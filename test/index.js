@@ -141,5 +141,14 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("New version")
+    .this(function () {
+      const s = new Store({ version : store.version + 1 })
+      return typeof s.a === "undefined";
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });

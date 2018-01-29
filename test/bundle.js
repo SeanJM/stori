@@ -204,6 +204,13 @@ var store = new _index2.default();
     return true;
   });
 
+  test("New version").this(function () {
+    var s = new _index2.default({ version: store.version + 1 });
+    return typeof s.a === "undefined";
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -359,6 +366,15 @@ function Store(props) {
     if (value !== "undefined") {
       parsed = JSON.parse(value);
       cache[key] = parsed;
+    }
+  }
+
+  props.version = props.version || 0;
+  cache.version = cache.version || 0;
+
+  if (props.version > cache.version) {
+    for (var k in cache) {
+      delete cache[k];
     }
   }
 
@@ -577,3 +593,4 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
