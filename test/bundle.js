@@ -447,12 +447,10 @@ Store.prototype.save = function () {
   this.__deferred = setTimeout(function () {
     for (var key in _this) {
       if (_this.hasOwnProperty(key) && !EXCLUDED_PROPERTIES[key] && typeof _this[key] !== "function") {
-        console.log(key, JSON.stringify(_this[key]));
         window.localStorage.setItem(key, JSON.stringify(_this[key]));
       }
     }
   }, 50);
-  console.log(window.localStorage.version);
 };
 
 exports.default = Store;

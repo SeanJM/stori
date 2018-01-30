@@ -109,7 +109,6 @@ Store.prototype.save = function () {
         !EXCLUDED_PROPERTIES[key] &&
         typeof this[key] !== "function"
       ) {
-        console.log(key, JSON.stringify(this[key]));
         window.localStorage.setItem(
           key,
           JSON.stringify(this[key])
@@ -117,7 +116,6 @@ Store.prototype.save = function () {
       }
     }
   }, 50);
-  console.log(window.localStorage.version);
 };
 
 export default Store;
