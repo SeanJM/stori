@@ -353,15 +353,13 @@ var EXCLUDED_PROPERTIES = {
 function Store(props) {
   var cache = {};
   var i = 0;
-  var key = void 0;
   var value = void 0;
   var parsed = void 0;
 
   props = props || {};
 
   // Loads the localStorage object keys as properties of 'this'
-  for (; window.localStorage.key(i); i += 1) {
-    key = window.localStorage.key(i);
+  for (var key in window.localStorage) {
     value = window.localStorage.getItem(key);
     if (value !== "undefined") {
       parsed = JSON.parse(value);
@@ -449,11 +447,12 @@ Store.prototype.save = function () {
   this.__deferred = setTimeout(function () {
     for (var key in _this) {
       if (_this.hasOwnProperty(key) && !EXCLUDED_PROPERTIES[key] && typeof _this[key] !== "function") {
-        // console.log(key, JSON.stringify(this[key]));
+        console.log(key, JSON.stringify(_this[key]));
         window.localStorage.setItem(key, JSON.stringify(_this[key]));
       }
     }
   }, 50);
+  console.log(window.localStorage.version);
 };
 
 exports.default = Store;
@@ -593,4 +592,3 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=bundle.js.map

@@ -11,15 +11,13 @@ const EXCLUDED_PROPERTIES = {
 function Store(props) {
   const cache = {};
   let i = 0;
-  let key;
   let value;
   let parsed;
 
   props = props || {};
 
   // Loads the localStorage object keys as properties of 'this'
-  for (; window.localStorage.key(i); i += 1) {
-    key    = window.localStorage.key(i);
+  for (var key in window.localStorage) {
     value  = window.localStorage.getItem(key);
     if (value !== "undefined") {
       parsed = JSON.parse(value);
@@ -111,7 +109,7 @@ Store.prototype.save = function () {
         !EXCLUDED_PROPERTIES[key] &&
         typeof this[key] !== "function"
       ) {
-        // console.log(key, JSON.stringify(this[key]));
+        console.log(key, JSON.stringify(this[key]));
         window.localStorage.setItem(
           key,
           JSON.stringify(this[key])
@@ -119,6 +117,7 @@ Store.prototype.save = function () {
       }
     }
   }, 50);
+  console.log(window.localStorage.version);
 };
 
 export default Store;
