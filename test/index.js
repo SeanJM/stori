@@ -150,5 +150,39 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("onChange")
+    .this(function () {
+      const state = [];
+
+      store.onChange(function (path, value) {
+        state.push({
+          path : path,
+          value : value
+        })
+      });
+
+      store.set({
+        path : {
+          to : {
+            virtue : "is here"
+          },
+          above : {
+            is : "now"
+          }
+        }
+      });
+
+      return (
+        state[0].path === "path.to.virtue" &&
+        state[0].value === "is here" &&
+        state[1].path === "path.above.is" &&
+        state[1].value === "now" &&
+        state.length === 2
+      );
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });

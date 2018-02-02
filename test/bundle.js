@@ -211,6 +211,32 @@ var store = new _index2.default();
     return true;
   });
 
+  test("onChange").this(function () {
+    var state = [];
+
+    store.onChange(function (path, value) {
+      state.push({
+        path: path,
+        value: value
+      });
+    });
+
+    store.set({
+      path: {
+        to: {
+          virtue: "is here"
+        },
+        above: {
+          is: "now"
+        }
+      }
+    });
+
+    return state[0].path === "path.to.virtue" && state[0].value === "is here" && state[1].path === "path.above.is" && state[1].value === "now" && state.length === 2;
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -384,6 +410,7 @@ function Store(props) {
     this[k] = cache[k];
   }
 
+  this.__onchange = [];
   this.__bus = new _Bus2.default({ target: this });
   this.__deferred = false;
   this.save();
@@ -404,6 +431,10 @@ Store.prototype.off = function (path, callback) {
   return this;
 };
 
+Store.prototype.onChange = function (callback) {
+  this.__onchange.push(callback);
+};
+
 Store.prototype.triggerPaths = function (paths) {
   var done = {};
   var temp = void 0;
@@ -419,6 +450,20 @@ Store.prototype.triggerPaths = function (paths) {
   return this;
 };
 
+Store.prototype.triggerOnChange = function (paths) {
+  var filter = [];
+  var s = void 0;
+
+  for (var i = 0, n = paths.length; i < n; i++) {
+    s = paths[i].slice(0, paths[i].length - 2).join(".");
+    if (s.length && filter.indexOf(s) === -1) {
+      for (var a = 0, b = this.__onchange.length; a < b; a++) {
+        this.__onchange[a](paths[i].join("."), (0, _get2.default)(this, paths[i]));
+      }
+    }
+  }
+};
+
 Store.prototype.set = function (object) {
   var paths = (0, _getPathList2.default)(object);
   var value = void 0;
@@ -432,6 +477,7 @@ Store.prototype.set = function (object) {
   }
 
   this.triggerPaths(paths);
+  this.triggerOnChange(paths);
   this.save();
   return this;
 };

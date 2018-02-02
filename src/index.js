@@ -42,6 +42,7 @@ function Store(props) {
     this[k] = cache[k];
   }
 
+  this.__onchange = [];
   this.__bus      = new Bus({ target : this });
   this.__deferred = false;
   this.save();
@@ -62,6 +63,10 @@ Store.prototype.off = function (path, callback) {
   return this;
 };
 
+Store.prototype.onChange = function (callback) {
+  this.__onchange.push(callback);
+};
+
 Store.prototype.triggerPaths = function (paths) {
   const done = {};
   let   temp;
@@ -75,6 +80,20 @@ Store.prototype.triggerPaths = function (paths) {
     }
   }
   return this;
+};
+
+Store.prototype.triggerOnChange = function (paths) {
+  const filter = [];
+  let s;
+
+  for (var i = 0, n = paths.length; i < n; i++) {
+    s = paths[i].slice(0, paths[i].length - 2).join(".");
+    if (s.length && filter.indexOf(s) === -1) {
+      for (var a = 0, b = this.__onchange.length; a < b; a++) {
+        this.__onchange[a](paths[i].join("."), get(this, paths[i]))
+      }
+    }
+  }
 };
 
 Store.prototype.set = function (object) {
@@ -92,6 +111,7 @@ Store.prototype.set = function (object) {
   }
 
   this.triggerPaths(paths);
+  this.triggerOnChange(paths);
   this.save();
   return this;
 };
