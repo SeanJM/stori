@@ -83,9 +83,17 @@ Store.prototype.triggerPaths = function (paths) {
 };
 
 Store.prototype.triggerOnChange = function (paths) {
+  const filter = [];
+
   for (var i = 0, n = paths.length; i < n; i++) {
+    if (filter.indexOf(paths[i][0]) === -1) {
+      filter.push(paths[i][0]);
+    }
+  }
+
+  for (i = 0, n = filter.length; i < n; i++) {
     for (var a = 0, b = this.__onchange.length; a < b; a++) {
-      this.__onchange[a](paths[i].join("."), get(this, paths[i]))
+      this.__onchange[a](filter[i], this[filter[i]]);
     }
   }
 };

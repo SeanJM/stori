@@ -212,13 +212,11 @@ var store = new _index2.default();
   });
 
   test("onChange").this(function () {
-    var state = [];
+    var state = {};
 
     store.onChange(function (path, value) {
-      state.push({
-        path: path,
-        value: value
-      });
+      state.path = path;
+      state.value = value;
     });
 
     store.set({
@@ -232,7 +230,7 @@ var store = new _index2.default();
       }
     });
 
-    return state[0].path === "path.to.virtue" && state[0].value === "is here" && state[1].path === "path.above.is" && state[1].value === "now" && state.length === 2;
+    return state.path === "path" && state.value.to.virtue === "is here" && state.value.above.is === "now";
   }).isEqual(function () {
     return true;
   });
@@ -451,9 +449,17 @@ Store.prototype.triggerPaths = function (paths) {
 };
 
 Store.prototype.triggerOnChange = function (paths) {
+  var filter = [];
+
   for (var i = 0, n = paths.length; i < n; i++) {
+    if (filter.indexOf(paths[i][0]) === -1) {
+      filter.push(paths[i][0]);
+    }
+  }
+
+  for (i = 0, n = filter.length; i < n; i++) {
     for (var a = 0, b = this.__onchange.length; a < b; a++) {
-      this.__onchange[a](paths[i].join("."), (0, _get2.default)(this, paths[i]));
+      this.__onchange[a](filter[i], this[filter[i]]);
     }
   }
 };
