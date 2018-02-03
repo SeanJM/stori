@@ -431,6 +431,12 @@ Store.prototype.off = function (path, callback) {
 
 Store.prototype.onChange = function (callback) {
   this.__onchange.push(callback);
+  return this;
+};
+
+Store.prototype.offChange = function (callback) {
+  this.__onchange.splice(this.__onchange.indexOf(callback), 1);
+  return this;
 };
 
 Store.prototype.triggerPaths = function (paths) {
