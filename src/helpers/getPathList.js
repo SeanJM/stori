@@ -1,9 +1,20 @@
 function getKeyValues(paths, path, value) {
-  if (Array.isArray(value) || typeof value !== "object") {
+  let keys = [];
+
+  if (typeof value === "undefined" || value == null) {
+    paths.push(path);
+  } else if (Array.isArray(value) || typeof value !== "object") {
     paths.push(path);
   } else {
     for (var k in value) {
-      getKeyValues(paths, path.concat(k), value[k]);
+      keys.push(k);
+    }
+    if (keys.length) {
+      for (var i = 0, n = keys.length; i < n; i++) {
+        getKeyValues(paths, path.concat(keys[i]), value[keys[i]]);
+      }
+    } else {
+      getKeyValues(paths, path, undefined);
     }
   }
 }

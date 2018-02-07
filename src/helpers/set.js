@@ -3,7 +3,7 @@ export default function set(target, path, value) {
   let p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
-    if (typeof t[p[i]] !== "object" || typeof t[p[i]] == null) {
+    if (typeof t[p[i]] !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
     }
     t = t[p[i]];

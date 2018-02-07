@@ -235,6 +235,21 @@ var store = new _index2.default();
     return true;
   });
 
+  test("Setting empty objects").this(function () {
+    var store = new _index2.default();
+
+    store.set({
+      service: {
+        modal: {},
+        slideIn: {}
+      }
+    });
+
+    return !!store.service.modal && !!store.service.slideIn;
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -490,6 +505,7 @@ Store.prototype.set = function (object) {
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();
+
   return this;
 };
 
@@ -583,7 +599,7 @@ function set(target, path, value) {
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
-    if (_typeof(t[p[i]]) !== "object" || typeof t[p[i]] == null) {
+    if (_typeof(t[p[i]]) !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
     }
     t = t[p[i]];
@@ -630,11 +646,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.default = getPathList;
 function getKeyValues(paths, path, value) {
-  if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object") {
+  var keys = [];
+
+  if (typeof value === "undefined" || value == null) {
+    paths.push(path);
+  } else if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object") {
     paths.push(path);
   } else {
     for (var k in value) {
-      getKeyValues(paths, path.concat(k), value[k]);
+      keys.push(k);
+    }
+    if (keys.length) {
+      for (var i = 0, n = keys.length; i < n; i++) {
+        getKeyValues(paths, path.concat(keys[i]), value[keys[i]]);
+      }
+    } else {
+      getKeyValues(paths, path, undefined);
     }
   }
 }

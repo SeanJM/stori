@@ -180,5 +180,22 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("Setting empty objects")
+    .this(function () {
+      const store = new Store();
+
+      store.set({
+        service : {
+          modal : {},
+          slideIn : {},
+        }
+      });
+
+      return !!store.service.modal && !!store.service.slideIn;
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });

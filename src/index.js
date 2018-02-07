@@ -126,6 +126,7 @@ Store.prototype.set = function (object) {
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();
+
   return this;
 };
 
