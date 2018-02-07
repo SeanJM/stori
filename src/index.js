@@ -93,7 +93,8 @@ Store.prototype.triggerPaths = function (paths) {
 };
 
 Store.prototype.triggerOnChange = function (paths) {
-  const filter = [];
+  const filter   = [];
+  const onchange = this.__onchange.slice();
 
   for (var i = 0, n = paths.length; i < n; i++) {
     if (filter.indexOf(paths[i][0]) === -1) {
@@ -102,8 +103,8 @@ Store.prototype.triggerOnChange = function (paths) {
   }
 
   for (i = 0, n = filter.length; i < n; i++) {
-    for (var a = 0, b = this.__onchange.length; a < b; a++) {
-      this.__onchange[a](filter[i], this[filter[i]]);
+    for (var a = 0, b = onchange.length; a < b; a++) {
+      onchange[a](filter[i], this[filter[i]]);
     }
   }
 };
