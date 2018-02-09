@@ -5,9 +5,11 @@ function getKeyValues(paths, path, value) {
     paths.push(path);
   } else if (Array.isArray(value) || (typeof value !== "object" && typeof value !== "function")) {
     paths.push(path);
-  } else if (typeof value !== "function") {
+  } else {
     for (var k in value) {
-      keys.push(k);
+      if (value.hasOwnProperty(k)) {
+        keys.push(k);
+      }
     }
     if (keys.length) {
       for (var i = 0, n = keys.length; i < n; i++) {
