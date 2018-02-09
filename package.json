@@ -1,6 +1,6 @@
 {
   "name": "stori",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A storage component with emitters and listeners",
   "main": "index.js",
   "scripts": {
