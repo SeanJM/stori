@@ -5,7 +5,7 @@ function getKeyValues(paths, path, value) {
     paths.push(path);
   } else if (Array.isArray(value) || typeof value !== "object") {
     paths.push(path);
-  } else {
+  } else if (typeof value !== "function") {
     for (var k in value) {
       keys.push(k);
     }

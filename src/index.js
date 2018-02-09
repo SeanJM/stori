@@ -10,7 +10,6 @@ const EXCLUDED_PROPERTIES = {
 
 function Store(props) {
   const cache = {};
-  let i = 0;
   let value;
   let parsed;
 
@@ -34,7 +33,7 @@ function Store(props) {
     }
   }
 
-  for (var k in props) {
+  for (k in props) {
     this[k] = props[k];
   }
 

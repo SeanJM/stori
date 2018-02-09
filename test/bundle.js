@@ -391,7 +391,6 @@ var EXCLUDED_PROPERTIES = {
 
 function Store(props) {
   var cache = {};
-  var i = 0;
   var value = void 0;
   var parsed = void 0;
 
@@ -415,7 +414,7 @@ function Store(props) {
     }
   }
 
-  for (var k in props) {
+  for (k in props) {
     this[k] = props[k];
   }
 
@@ -652,7 +651,7 @@ function getKeyValues(paths, path, value) {
     paths.push(path);
   } else if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object") {
     paths.push(path);
-  } else {
+  } else if (typeof value !== "function") {
     for (var k in value) {
       keys.push(k);
     }
