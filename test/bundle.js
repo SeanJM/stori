@@ -250,13 +250,6 @@ var store = new _index2.default();
     return true;
   });
 
-  test("Date to JSON").this(function () {
-    store.set({ date: new Date() });
-    return typeof store.date === "string";
-  }).isEqual(function () {
-    return true;
-  });
-
   load();
 });
 
@@ -611,7 +604,7 @@ function set(target, path, value) {
     t = t[p[i]];
   }
 
-  t[p.slice(-1)[0]] = value && typeof value.toJSON === "function" ? value.toJSON() : value;
+  t[p.slice(-1)[0]] = value;
 }
 
 /***/ }),
@@ -656,7 +649,7 @@ function getKeyValues(paths, path, value) {
 
   if (typeof value === "undefined" || value == null) {
     paths.push(path);
-  } else if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object") {
+  } else if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object" && typeof value !== "function") {
     paths.push(path);
   } else if (typeof value !== "function") {
     for (var k in value) {

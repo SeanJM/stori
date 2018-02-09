@@ -3,7 +3,7 @@ function getKeyValues(paths, path, value) {
 
   if (typeof value === "undefined" || value == null) {
     paths.push(path);
-  } else if (Array.isArray(value) || typeof value !== "object") {
+  } else if (Array.isArray(value) || (typeof value !== "object" && typeof value !== "function")) {
     paths.push(path);
   } else if (typeof value !== "function") {
     for (var k in value) {

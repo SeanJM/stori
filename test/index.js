@@ -197,14 +197,5 @@ tinyTest((test, load) => {
       return true;
     });
 
-  test("Date to JSON")
-    .this(function () {
-      store.set({ date : new Date() });
-      return typeof store.date === "string";
-    })
-    .isEqual(() => {
-      return true;
-    });
-
   load();
 });

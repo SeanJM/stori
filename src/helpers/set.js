@@ -9,9 +9,5 @@ export default function set(target, path, value) {
     t = t[p[i]];
   }
 
-  t[p.slice(-1)[0]] = (
-    value && typeof value.toJSON === "function"
-      ? value.toJSON()
-      : value
-  );
+  t[p.slice(-1)[0]] = value;
 }
