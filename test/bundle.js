@@ -250,6 +250,13 @@ var store = new _index2.default();
     return true;
   });
 
+  test("Date to JSON").this(function () {
+    store.set({ date: new Date() });
+    return typeof store.date === "string";
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
