@@ -250,6 +250,31 @@ var store = new _index2.default();
     return true;
   });
 
+  test("Immutable?").this(function () {
+    var store = new _index2.default();
+    var t = [];
+
+    store.set({
+      service: {
+        modal: "test"
+      }
+    });
+
+    t.push(store.service);
+
+    store.set({
+      service: {
+        modal: "test2"
+      }
+    });
+
+    t.push(store.service);
+
+    return t[0].modal === "test" && t[1].modal === "test2";
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -600,7 +625,12 @@ function set(target, path, value) {
   for (var i = 0, n = p.length - 1; i < n; i++) {
     if (_typeof(t[p[i]]) !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
+    } else if (Array.isArray(t[p[i]])) {
+      t[p[i]] = t[p[i]].slice();
+    } else if (_typeof(t[p[i]]) === "object") {
+      t[p[i]] = Object.assign({}, t[p[i]]);
     }
+
     t = t[p[i]];
   }
 
@@ -675,4 +705,3 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=bundle.js.map

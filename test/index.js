@@ -197,5 +197,32 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("Immutable?")
+    .this(function () {
+      const store = new Store();
+      const t = [];
+
+      store.set({
+        service : {
+          modal : "test"
+        }
+      });
+
+      t.push(store.service);
+
+      store.set({
+        service : {
+          modal : "test2"
+        }
+      });
+
+      t.push(store.service);
+
+      return t[0].modal === "test" && t[1].modal === "test2";
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });
