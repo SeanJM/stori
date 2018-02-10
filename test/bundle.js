@@ -541,7 +541,7 @@ Store.prototype.save = function () {
   this.deferred = setTimeout(function () {
     for (var key in _this.value) {
       if (typeof _this.value[key] !== "function") {
-        window.localStorage.setItem(key, JSON.stringify(_this[key]));
+        window.localStorage.setItem(key, JSON.stringify(_this.value[key]));
       }
     }
   }, 50);

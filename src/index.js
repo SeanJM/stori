@@ -137,7 +137,7 @@ Store.prototype.save = function () {
       if (typeof this.value[key] !== "function") {
         window.localStorage.setItem(
           key,
-          JSON.stringify(this[key])
+          JSON.stringify(this.value[key])
         );
       }
     }
