@@ -3,17 +3,17 @@ import set         from "./helpers/set";
 import get         from "./helpers/get";
 import getPathList from "./helpers/getPathList";
 
-const EXCLUDED_PROPERTIES = {
-  __bus      : true,
-  __deferred : true,
-};
-
 function Store(props) {
   const cache = {};
   let value;
   let parsed;
 
-  props = props || {};
+  props         = props || {};
+
+  this.bus      = new Bus({ target : this });
+  this.deferred = false;
+  this.onchange = [];
+  this.value    = {};
 
   // Loads the localStorage object keys as properties of 'this'
   for (var key in window.localStorage) {
@@ -34,44 +34,41 @@ function Store(props) {
   }
 
   for (k in props) {
-    this[k] = props[k];
+    this.value[k] = props[k];
   }
 
   for (k in cache) {
-    this[k] = cache[k];
+    this.value[k] = cache[k];
   }
 
-  this.__onchange = [];
-  this.__bus      = new Bus({ target : this });
-  this.__deferred = false;
   this.save();
 }
 
 Store.prototype.on = function (path, callback) {
-  this.__bus.on(path, callback);
+  this.bus.on(path, callback);
   return this;
 };
 
 Store.prototype.once = function (path, callback) {
-  this.__bus.once(path, callback);
+  this.bus.once(path, callback);
   return this;
 };
 
 Store.prototype.off = function (path, callback) {
-  this.__bus.off(path, callback);
+  this.bus.off(path, callback);
   return this;
 };
 
 Store.prototype.onChange = function (callback) {
   if (typeof callback === "function") {
-    this.__onchange.push(callback);
+    this.onchange.push(callback);
   }
   return this;
 };
 
 Store.prototype.offChange = function (callback) {
   if (typeof callback === "function") {
-    this.__onchange.splice(this.__onchange.indexOf(callback), 1);
+    this.onchange.splice(this.onchange.indexOf(callback), 1);
   }
   return this;
 };
@@ -84,7 +81,7 @@ Store.prototype.triggerPaths = function (paths) {
       temp = paths[i].slice(0, x);
       if (!done[temp]) {
         done[temp] = true;
-        this.__bus.trigger(temp.join("."), get(this, temp));
+        this.bus.trigger(temp.join("."), get(this.value, temp));
       }
     }
   }
@@ -93,7 +90,7 @@ Store.prototype.triggerPaths = function (paths) {
 
 Store.prototype.triggerOnChange = function (paths) {
   const filter   = [];
-  const onchange = this.__onchange.slice();
+  const onchange = this.onchange.slice();
 
   for (var i = 0, n = paths.length; i < n; i++) {
     if (filter.indexOf(paths[i][0]) === -1) {
@@ -103,7 +100,7 @@ Store.prototype.triggerOnChange = function (paths) {
 
   for (i = 0, n = filter.length; i < n; i++) {
     for (var a = 0, b = onchange.length; a < b; a++) {
-      onchange[a](filter[i], this[filter[i]]);
+      onchange[a](filter[i], this.value[filter[i]]);
     }
   }
 };
@@ -119,7 +116,7 @@ Store.prototype.set = function (object) {
         "[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name."
       );
     }
-    set(this, paths[i], value);
+    set(this.value, paths[i], value);
   }
 
   this.triggerPaths(paths);
@@ -130,18 +127,14 @@ Store.prototype.set = function (object) {
 };
 
 Store.prototype.get = function (path) {
-  return get(this, [].concat(path).join("."));
+  return get(this.value, [].concat(path).join("."));
 };
 
 Store.prototype.save = function () {
-  clearTimeout(this.__deferred);
-  this.__deferred = setTimeout(() => {
-    for (var key in this) {
-      if (
-        this.hasOwnProperty(key) &&
-        !EXCLUDED_PROPERTIES[key] &&
-        typeof this[key] !== "function"
-      ) {
+  clearTimeout(this.deferred);
+  this.deferred = setTimeout(() => {
+    for (var key in this.value) {
+      if (typeof this.value[key] !== "function") {
         window.localStorage.setItem(
           key,
           JSON.stringify(this[key])

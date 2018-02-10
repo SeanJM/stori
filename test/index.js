@@ -9,7 +9,7 @@ tinyTest((test, load) => {
       store.set({
         value : "this"
       });
-      return store.value;
+      return store.value.value;
     })
     .isEqual(() => {
       return "this";
@@ -20,7 +20,7 @@ tinyTest((test, load) => {
       store.set({
         isFalse : false
       });
-      return store.isFalse;
+      return store.value.isFalse;
     })
     .isEqual(() => {
       return false;
@@ -117,7 +117,7 @@ tinyTest((test, load) => {
         }
       });
 
-      return store.a.b && store.a.c;
+      return store.value.a.b && store.value.a.c;
     })
     .isEqual(() => {
       return true;
@@ -135,7 +135,7 @@ tinyTest((test, load) => {
         }
       });
 
-      return store.a.c;
+      return store.value.a.c;
     })
     .isEqual(() => {
       return true;
@@ -191,7 +191,7 @@ tinyTest((test, load) => {
         }
       });
 
-      return !!store.service.modal && !!store.service.slideIn;
+      return !!store.value.service.modal && !!store.value.service.slideIn;
     })
     .isEqual(() => {
       return true;
@@ -208,7 +208,7 @@ tinyTest((test, load) => {
         }
       });
 
-      t.push(store.service);
+      t.push(store.value.service);
 
       store.set({
         service : {
@@ -216,7 +216,7 @@ tinyTest((test, load) => {
         }
       });
 
-      t.push(store.service);
+      t.push(store.value.service);
 
       return t[0].modal === "test" && t[1].modal === "test2";
     })
