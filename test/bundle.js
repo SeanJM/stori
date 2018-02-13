@@ -427,11 +427,11 @@ var _get = __webpack_require__(6);
 
 var _get2 = _interopRequireDefault(_get);
 
-var _copy = __webpack_require__(8);
+var _copy = __webpack_require__(7);
 
 var _copy2 = _interopRequireDefault(_copy);
 
-var _getPathList = __webpack_require__(7);
+var _getPathList = __webpack_require__(8);
 
 var _getPathList2 = _interopRequireDefault(_getPathList);
 
@@ -649,10 +649,8 @@ function set(obj, path, value) {
   for (var i = 0, n = p.length - 1; i < n; i++) {
     if (_typeof(t[p[i]]) !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
-    } else if (Array.isArray(t[p[i]])) {
-      t[p[i]] = t[p[i]].slice();
-    } else if (_typeof(t[p[i]]) === "object") {
-      t[p[i]] = Object.assign({}, t[p[i]]);
+    } else {
+      t[p[i]] = t[p[i]];
     }
 
     t = t[p[i]];
@@ -697,6 +695,39 @@ Object.defineProperty(exports, "__esModule", {
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+exports.default = copy;
+function copy(x) {
+  var i = 0;
+  var t;
+
+  if (Array.isArray(x)) {
+    t = [];
+    while (i++ < x.length) {
+      t[i] = copy(x[i]);
+    }
+  } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
+    t = {};
+    for (var k in x) {
+      t[k] = copy(x[k]);
+    }
+  }
+
+  return t || x;
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 exports.default = getPathList;
 function getKeyValues(paths, path, value) {
   var keys = [];
@@ -725,39 +756,6 @@ function getPathList(object) {
   var paths = [];
   getKeyValues(paths, [], object);
   return paths;
-}
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-exports.default = copy;
-function copy(x) {
-  var i = 0;
-  var t;
-
-  if (Array.isArray(x)) {
-    t = [];
-    while (i++ < x.length) {
-      t[i] = copy(x[i]);
-    }
-  } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
-    t = {};
-    for (var k in x) {
-      t[k] = copy(x[k]);
-    }
-  }
-
-  return t || x;
 }
 
 /***/ })

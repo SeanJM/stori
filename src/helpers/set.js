@@ -5,10 +5,8 @@ export default function set(obj, path, value) {
   for (var i = 0, n = p.length - 1; i < n; i++) {
     if (typeof t[p[i]] !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
-    } else if (Array.isArray(t[p[i]])) {
-      t[p[i]] = t[p[i]].slice();
-    } else if (typeof t[p[i]] === "object") {
-      t[p[i]] = Object.assign({}, t[p[i]]);
+    } else {
+      t[p[i]] = t[p[i]];
     }
 
     t = t[p[i]];
