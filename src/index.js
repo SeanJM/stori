@@ -116,9 +116,11 @@ Store.prototype.set = function (object) {
         "[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name."
       );
     }
-    set(this.value, paths[i], value);
+
+    set(this, paths[i], value);
   }
 
+  this.value = {...this.value};
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();

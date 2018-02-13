@@ -391,6 +391,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _Bus = __webpack_require__(4);
 
 var _Bus2 = _interopRequireDefault(_Bus);
@@ -520,9 +522,11 @@ Store.prototype.set = function (object) {
     if (this[paths[i][0]] === "function") {
       throw new Error("[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name.");
     }
-    (0, _set2.default)(this.value, paths[i], value);
+
+    (0, _set2.default)(this, paths[i], value);
   }
 
+  this.value = _extends({}, this.value);
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();
@@ -615,8 +619,8 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.default = set;
-function set(target, path, value) {
-  var t = target;
+function set(store, path, value) {
+  var t = store.value;
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
@@ -702,3 +706,4 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
+//# sourceMappingURL=bundle.js.map
