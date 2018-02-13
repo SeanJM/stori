@@ -126,6 +126,7 @@ tinyTest((test, load) => {
   test("Set (nulls)")
     .this(function () {
       store.set({
+        b : null,
         a : null
       });
 
@@ -135,7 +136,7 @@ tinyTest((test, load) => {
         }
       });
 
-      return store.value.a.c;
+      return store.value.a.c && store.value.b == null;
     })
     .isEqual(() => {
       return true;
@@ -143,7 +144,7 @@ tinyTest((test, load) => {
 
   test("New version")
     .this(function () {
-      const s = new Store({ version : store.version + 1 })
+      const s = new Store({ version : store.version + 1 });
       return typeof s.a === "undefined";
     })
     .isEqual(() => {

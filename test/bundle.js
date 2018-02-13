@@ -190,6 +190,7 @@ var store = new _index2.default();
 
   test("Set (nulls)").this(function () {
     store.set({
+      b: null,
       a: null
     });
 
@@ -199,7 +200,7 @@ var store = new _index2.default();
       }
     });
 
-    return store.value.a.c;
+    return store.value.a.c && store.value.b == null;
   }).isEqual(function () {
     return true;
   });
@@ -644,19 +645,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.default = set;
 function set(obj, path, value) {
   var t = obj;
+
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
-  for (var i = 0, n = p.length - 1; i < n; i++) {
+  var i = -1;
+  var n = p.length - 1;
+
+  while (++i < n) {
     if (_typeof(t[p[i]]) !== "object" || t[p[i]] == null) {
       t[p[i]] = {};
     } else {
       t[p[i]] = t[p[i]];
     }
-
     t = t[p[i]];
   }
 
-  t[p.slice(-1)[0]] = value;
+  t[p[n]] = value;
 }
 
 /***/ }),
@@ -672,13 +676,19 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = get;
 function get(target, path) {
   var t = target;
+
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
-  for (var i = 0, n = p.length; i < n; i++) {
-    if (typeof t[p[i]] === "undefined") {
-      return undefined;
+
+  var i = -1;
+  var n = p.length;
+
+  while (++i < n) {
+    if (!t[p[i]]) {
+      return t[p[i]];
     }
     t = t[p[i]];
   }
+
   return t;
 }
 
@@ -701,16 +711,18 @@ function copy(x) {
   var n;
   var t;
 
-  if (Array.isArray(x)) {
-    t = [];
-    n = x.length;
-    while (++i < n) {
-      t[i] = copy(x[i]);
-    }
-  } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
-    t = {};
-    for (var k in x) {
-      t[k] = copy(x[k]);
+  if (x) {
+    if (Array.isArray(x)) {
+      t = [];
+      n = x.length;
+      while (++i < n) {
+        t[i] = copy(x[i]);
+      }
+    } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
+      t = {};
+      for (var k in x) {
+        t[k] = copy(x[k]);
+      }
     }
   }
 
@@ -733,10 +745,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 exports.default = getPathList;
 function getKeyValues(paths, path, value) {
   var keys = [];
+  var i = -1;
+  var n = 0;
 
-  if (typeof value === "undefined" || value == null) {
-    paths.push(path);
-  } else if (Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object" && typeof value !== "function") {
+  if (!value || Array.isArray(value) || (typeof value === "undefined" ? "undefined" : _typeof(value)) !== "object" && typeof value !== "function") {
     paths.push(path);
   } else {
     for (var k in value) {
@@ -744,11 +756,15 @@ function getKeyValues(paths, path, value) {
         keys.push(k);
       }
     }
-    if (keys.length) {
-      for (var i = 0, n = keys.length; i < n; i++) {
-        getKeyValues(paths, path.concat(keys[i]), value[keys[i]]);
-      }
-    } else {
+
+    i = -1;
+    n = keys.length;
+
+    while (++i < n) {
+      getKeyValues(paths, path.concat(keys[i]), value[keys[i]]);
+    }
+
+    if (!n) {
       getKeyValues(paths, path, undefined);
     }
   }
@@ -762,4 +778,3 @@ function getPathList(object) {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=bundle.js.map
