@@ -1,10 +1,12 @@
 export default function copy(x) {
-  var i = 0;
+  var i = -1;
+  var n;
   var t;
 
   if (Array.isArray(x)) {
     t = [];
-    while (i++ < x.length) {
+    n = x.length;
+    while (++i < n) {
       t[i] = copy(x[i]);
     }
   } else if (typeof x === "object") {

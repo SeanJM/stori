@@ -1,6 +1,6 @@
 export default function set(obj, path, value) {
-  let t = obj;
-  let p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
+  var t = obj;
+  var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
     if (typeof t[p[i]] !== "object" || t[p[i]] == null) {

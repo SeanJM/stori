@@ -697,12 +697,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 exports.default = copy;
 function copy(x) {
-  var i = 0;
+  var i = -1;
+  var n;
   var t;
 
   if (Array.isArray(x)) {
     t = [];
-    while (i++ < x.length) {
+    n = x.length;
+    while (++i < n) {
       t[i] = copy(x[i]);
     }
   } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
