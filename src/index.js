@@ -1,6 +1,7 @@
 import Bus         from "./class/Bus";
 import set         from "./helpers/set";
 import get         from "./helpers/get";
+import copy        from "./helpers/copy";
 import getPathList from "./helpers/getPathList";
 
 function Store(props) {
@@ -106,21 +107,16 @@ Store.prototype.triggerOnChange = function (paths) {
 };
 
 Store.prototype.set = function (object) {
-  const paths = getPathList(object);
+  const paths    = getPathList(object);
+  const instance = copy(this.value);
   let value;
 
   for (var i = 0, n = paths.length; i < n; i++) {
     value = get(object, paths[i]);
-    if (this[paths[i][0]] === "function") {
-      throw new Error(
-        "[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name."
-      );
-    }
-
-    set(this, paths[i], value);
+    set(instance, paths[i], value);
   }
 
-  this.value = {...this.value};
+  this.value = instance;
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();

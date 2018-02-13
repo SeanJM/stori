@@ -224,5 +224,31 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("Immutable 2")
+    .this(function () {
+      const store = new Store();
+      const t = [];
+
+      store.set({
+        service : {
+          modal : "test"
+        }
+      });
+
+      t.push(store.value);
+
+      store.set({
+        service : {
+          modal : "test2"
+        }
+      });
+
+      t.push(store.value);
+      return t[0].service.modal === "test" && t[1].service.modal === "test2";
+    })
+    .isEqual(() => {
+      return true;
+    });
+
   load();
 });

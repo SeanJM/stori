@@ -275,6 +275,30 @@ var store = new _index2.default();
     return true;
   });
 
+  test("Immutable 2").this(function () {
+    var store = new _index2.default();
+    var t = [];
+
+    store.set({
+      service: {
+        modal: "test"
+      }
+    });
+
+    t.push(store.value);
+
+    store.set({
+      service: {
+        modal: "test2"
+      }
+    });
+
+    t.push(store.value);
+    return t[0].service.modal === "test" && t[1].service.modal === "test2";
+  }).isEqual(function () {
+    return true;
+  });
+
   load();
 });
 
@@ -391,8 +415,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _Bus = __webpack_require__(4);
 
 var _Bus2 = _interopRequireDefault(_Bus);
@@ -404,6 +426,10 @@ var _set2 = _interopRequireDefault(_set);
 var _get = __webpack_require__(6);
 
 var _get2 = _interopRequireDefault(_get);
+
+var _copy = __webpack_require__(8);
+
+var _copy2 = _interopRequireDefault(_copy);
 
 var _getPathList = __webpack_require__(7);
 
@@ -515,18 +541,15 @@ Store.prototype.triggerOnChange = function (paths) {
 
 Store.prototype.set = function (object) {
   var paths = (0, _getPathList2.default)(object);
+  var instance = (0, _copy2.default)(this.value);
   var value = void 0;
 
   for (var i = 0, n = paths.length; i < n; i++) {
     value = (0, _get2.default)(object, paths[i]);
-    if (this[paths[i][0]] === "function") {
-      throw new Error("[Store] Cannot set value \"" + paths[i][0] + "\", it is a reserved name.");
-    }
-
-    (0, _set2.default)(this, paths[i], value);
+    (0, _set2.default)(instance, paths[i], value);
   }
 
-  this.value = _extends({}, this.value);
+  this.value = instance;
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
   this.save();
@@ -619,8 +642,8 @@ Object.defineProperty(exports, "__esModule", {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 exports.default = set;
-function set(store, path, value) {
-  var t = store.value;
+function set(obj, path, value) {
+  var t = obj;
   var p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
@@ -702,6 +725,39 @@ function getPathList(object) {
   var paths = [];
   getKeyValues(paths, [], object);
   return paths;
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = copy;
+function copy(x) {
+  var i = 0;
+  var t;
+
+  if (Array.isArray(x)) {
+    t = [];
+    while (i++ < x.length) {
+      t[i] = copy(x[i]);
+    }
+  } else if ((typeof x === "undefined" ? "undefined" : _typeof(x)) === "object") {
+    t = {};
+    for (var k in x) {
+      t[k] = copy(x[k]);
+    }
+  }
+
+  return t || x;
 }
 
 /***/ })

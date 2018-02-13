@@ -1,5 +1,5 @@
-export default function set(store, path, value) {
-  let t = store.value;
+export default function set(obj, path, value) {
+  let t = obj;
   let p = Array.isArray(path) ? path.join(".").split(".") : path.split(".");
 
   for (var i = 0, n = p.length - 1; i < n; i++) {
