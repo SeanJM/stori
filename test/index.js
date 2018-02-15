@@ -272,5 +272,21 @@ tinyTest((test, load) => {
       return true;
     });
 
+  test("Persistance")
+    .this(function () {
+      const store = new Store();
+      setTimeout(() => {
+        store.set({
+          persistance : {
+            is : [ "key" ]
+          }
+        });
+      });
+      return store.get("persistance.is")[0];
+    })
+    .isEqual(() => {
+      return "key";
+    });
+
   load();
 });

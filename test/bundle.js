@@ -319,6 +319,20 @@ var store = new _index2.default();
     return true;
   });
 
+  test("Persistance").this(function () {
+    var store = new _index2.default();
+    setTimeout(function () {
+      store.set({
+        persistance: {
+          is: ["key"]
+        }
+      });
+    });
+    return store.get("persistance.is")[0];
+  }).isEqual(function () {
+    return "key";
+  });
+
   load();
 });
 
@@ -459,22 +473,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function Store(props) {
   var cache = {};
+  var stringifiedValue = void 0;
   var value = void 0;
-  var parsed = void 0;
-
-  props = props || {};
 
   this.bus = new _Bus2.default({ target: this });
   this.deferred = false;
   this.onchange = [];
   this.value = {};
 
+  props = props || {};
+
   // Loads the localStorage object keys as properties of 'this'
-  for (var key in window.localStorage) {
-    value = window.localStorage.getItem(key);
-    if (value !== "undefined") {
-      parsed = JSON.parse(value);
-      cache[key] = parsed;
+  for (var path in window.localStorage) {
+    stringifiedValue = window.localStorage.getItem(path);
+    if (stringifiedValue !== "undefined") {
+      value = JSON.parse(stringifiedValue);
+      (0, _set2.default)(cache, path, value);
     }
   }
 
@@ -590,12 +604,14 @@ Store.prototype.save = function () {
 
   clearTimeout(this.deferred);
   this.deferred = setTimeout(function () {
-    for (var key in _this.value) {
-      if (typeof _this.value[key] !== "function") {
-        window.localStorage.setItem(key, JSON.stringify(_this.value[key]));
-      }
+    var paths = (0, _getPathList2.default)(_this.value);
+    var i = -1;
+    var n = paths.length;
+
+    while (++i < n) {
+      window.localStorage.setItem(paths[i].join("."), JSON.stringify((0, _get2.default)(_this.value, paths[i])));
     }
-  }, 50);
+  }, 100);
 };
 
 exports.default = Store;

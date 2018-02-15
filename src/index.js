@@ -6,22 +6,22 @@ import getPathList from "./helpers/getPathList";
 
 function Store(props) {
   const cache = {};
+  let stringifiedValue;
   let value;
-  let parsed;
-
-  props         = props || {};
 
   this.bus      = new Bus({ target : this });
   this.deferred = false;
   this.onchange = [];
   this.value    = {};
 
+  props = props || {};
+
   // Loads the localStorage object keys as properties of 'this'
-  for (var key in window.localStorage) {
-    value  = window.localStorage.getItem(key);
-    if (value !== "undefined") {
-      parsed = JSON.parse(value);
-      cache[key] = parsed;
+  for (var path in window.localStorage) {
+    stringifiedValue = window.localStorage.getItem(path);
+    if (stringifiedValue !== "undefined") {
+      value = JSON.parse(stringifiedValue);
+      set(cache, path, value);
     }
   }
 
@@ -135,15 +135,17 @@ Store.prototype.copy = function (obj) {
 Store.prototype.save = function () {
   clearTimeout(this.deferred);
   this.deferred = setTimeout(() => {
-    for (var key in this.value) {
-      if (typeof this.value[key] !== "function") {
-        window.localStorage.setItem(
-          key,
-          JSON.stringify(this.value[key])
-        );
-      }
+    const paths = getPathList(this.value);
+    let i       = -1;
+    let n       = paths.length;
+
+    while (++i < n) {
+      window.localStorage.setItem(
+        paths[i].join("."),
+        JSON.stringify(get(this.value, paths[i]))
+      );
     }
-  }, 50);
+  }, 100);
 };
 
 export default Store;
