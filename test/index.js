@@ -127,7 +127,10 @@ tinyTest((test, load) => {
     .this(function () {
       store.set({
         b : null,
-        a : null
+        a : null,
+        c : {
+          value : null
+        }
       });
 
       store.set({
@@ -136,7 +139,13 @@ tinyTest((test, load) => {
         }
       });
 
-      return store.value.a.c && store.value.b == null;
+      store.set({
+        c : {
+          value : "cat"
+        }
+      });
+
+      return store.value.a.c && store.value.b == null && store.value.c.value === "cat";
     })
     .isEqual(() => {
       return true;
@@ -246,6 +255,18 @@ tinyTest((test, load) => {
 
       t.push(store.value);
       return t[0].service.modal === "test" && t[1].service.modal === "test2";
+    })
+    .isEqual(() => {
+      return true;
+    });
+
+  test("Copy helper")
+    .this(function () {
+      const store = new Store();
+      const t = [ { value : 1 }, { value : 2 } ];
+      const f = store.copy(t);
+      f[0].value = 3;
+      return t[0].value === 1 && f[0].value === 3;
     })
     .isEqual(() => {
       return true;

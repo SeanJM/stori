@@ -128,6 +128,10 @@ Store.prototype.get = function (path) {
   return get(this.value, [].concat(path).join("."));
 };
 
+Store.prototype.copy = function (obj) {
+  return copy(obj);
+};
+
 Store.prototype.save = function () {
   clearTimeout(this.deferred);
   this.deferred = setTimeout(() => {

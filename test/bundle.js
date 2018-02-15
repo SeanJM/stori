@@ -191,7 +191,10 @@ var store = new _index2.default();
   test("Set (nulls)").this(function () {
     store.set({
       b: null,
-      a: null
+      a: null,
+      c: {
+        value: null
+      }
     });
 
     store.set({
@@ -200,7 +203,13 @@ var store = new _index2.default();
       }
     });
 
-    return store.value.a.c && store.value.b == null;
+    store.set({
+      c: {
+        value: "cat"
+      }
+    });
+
+    return store.value.a.c && store.value.b == null && store.value.c.value === "cat";
   }).isEqual(function () {
     return true;
   });
@@ -296,6 +305,16 @@ var store = new _index2.default();
 
     t.push(store.value);
     return t[0].service.modal === "test" && t[1].service.modal === "test2";
+  }).isEqual(function () {
+    return true;
+  });
+
+  test("Copy helper").this(function () {
+    var store = new _index2.default();
+    var t = [{ value: 1 }, { value: 2 }];
+    var f = store.copy(t);
+    f[0].value = 3;
+    return t[0].value === 1 && f[0].value === 3;
   }).isEqual(function () {
     return true;
   });
@@ -560,6 +579,10 @@ Store.prototype.set = function (object) {
 
 Store.prototype.get = function (path) {
   return (0, _get2.default)(this.value, [].concat(path).join("."));
+};
+
+Store.prototype.copy = function (obj) {
+  return (0, _copy2.default)(obj);
 };
 
 Store.prototype.save = function () {
