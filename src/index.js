@@ -11,6 +11,7 @@ function Store(props) {
 
   this.bus        = new Bus({ target : this });
   this.isDeferred = false;
+  this.onsave     = [];
   this.onchange   = [];
   this.value      = {};
 
@@ -42,7 +43,7 @@ function Store(props) {
     this.value[k] = cache[k];
   }
 
-  this.save();
+  return this.save();
 }
 
 Store.prototype.on = function (path, callback) {
@@ -106,7 +107,7 @@ Store.prototype.triggerOnChange = function (paths) {
   }
 };
 
-Store.prototype.set = function (object) {
+Store.prototype.set = function (object, callback) {
   const paths    = getPathList(object);
   const instance = copy(this.value);
   let value;
@@ -119,9 +120,8 @@ Store.prototype.set = function (object) {
   this.value = instance;
   this.triggerPaths(paths);
   this.triggerOnChange(paths);
-  this.save();
 
-  return this;
+  return this.save(callback);
 };
 
 Store.prototype.get = function (path) {
@@ -132,7 +132,11 @@ Store.prototype.copy = function (obj) {
   return copy(obj);
 };
 
-Store.prototype.save = function () {
+Store.prototype.save = function (callback) {
+  if (callback) {
+    this.onsave.push(callback);
+  }
+
   if (!this.isDeferred) {
     const paths = getPathList(this.value);
     let i       = -1;
@@ -145,6 +149,11 @@ Store.prototype.save = function () {
         paths[i].join("."),
         JSON.stringify(get(this.value, paths[i]))
       );
+    }
+
+    while (this.onsave.length) {
+      this.onsave[0]();
+      this.onsave.shift();
     }
   }
 
