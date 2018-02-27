@@ -9,10 +9,10 @@ function Store(props) {
   let stringifiedValue;
   let value;
 
-  this.bus      = new Bus({ target : this });
-  this.deferred = false;
-  this.onchange = [];
-  this.value    = {};
+  this.bus        = new Bus({ target : this });
+  this.isDeferred = false;
+  this.onchange   = [];
+  this.value      = {};
 
   props = props || {};
 
@@ -133,11 +133,12 @@ Store.prototype.copy = function (obj) {
 };
 
 Store.prototype.save = function () {
-  clearTimeout(this.deferred);
-  this.deferred = setTimeout(() => {
+  if (!this.isDeferred) {
     const paths = getPathList(this.value);
     let i       = -1;
     let n       = paths.length;
+
+    this.isDeferred = true;
 
     while (++i < n) {
       window.localStorage.setItem(
@@ -145,7 +146,9 @@ Store.prototype.save = function () {
         JSON.stringify(get(this.value, paths[i]))
       );
     }
-  }, 100);
+  }
+
+  setTimeout(() => { this.isDeferred = false; }, 100);
 };
 
 export default Store;

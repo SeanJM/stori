@@ -477,7 +477,7 @@ function Store(props) {
   var value = void 0;
 
   this.bus = new _Bus2.default({ target: this });
-  this.deferred = false;
+  this.isDeferred = false;
   this.onchange = [];
   this.value = {};
 
@@ -602,15 +602,20 @@ Store.prototype.copy = function (obj) {
 Store.prototype.save = function () {
   var _this = this;
 
-  clearTimeout(this.deferred);
-  this.deferred = setTimeout(function () {
-    var paths = (0, _getPathList2.default)(_this.value);
+  if (!this.isDeferred) {
+    var paths = (0, _getPathList2.default)(this.value);
     var i = -1;
     var n = paths.length;
 
+    this.isDeferred = true;
+
     while (++i < n) {
-      window.localStorage.setItem(paths[i].join("."), JSON.stringify((0, _get2.default)(_this.value, paths[i])));
+      window.localStorage.setItem(paths[i].join("."), JSON.stringify((0, _get2.default)(this.value, paths[i])));
     }
+  }
+
+  setTimeout(function () {
+    _this.isDeferred = false;
   }, 100);
 };
 
