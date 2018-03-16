@@ -496,7 +496,8 @@ function Store(props) {
   props.version = props.version || 0;
   cache.version = cache.version || 0;
 
-  if (props.version > cache.version) {
+  // Ensure the cache has a previous version before comparing it
+  if (cache.version && props.version > cache.version) {
     for (var k in cache) {
       delete cache[k];
     }
