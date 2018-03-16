@@ -133,31 +133,38 @@ Store.prototype.copy = function (obj) {
 };
 
 Store.prototype.save = function (callback) {
+  var self = this;
+
+  function save() {
+    const paths = getPathList(self.value);
+    let i       = -1;
+    let n       = paths.length;
+
+    self.isDeferred = true;
+
+    while (++i < n) {
+      window.localStorage.setItem(
+        paths[i].join("."),
+        JSON.stringify(get(self.value, paths[i]))
+      );
+    }
+
+    while (self.onsave.length) {
+      self.onsave[0]();
+      self.onsave.shift();
+    }
+  }
+
   if (callback) {
     this.onsave.push(callback);
   }
 
   if (!this.isDeferred) {
-    const paths = getPathList(this.value);
-    let i       = -1;
-    let n       = paths.length;
-
-    this.isDeferred = true;
-
-    while (++i < n) {
-      window.localStorage.setItem(
-        paths[i].join("."),
-        JSON.stringify(get(this.value, paths[i]))
-      );
-    }
-
-    while (this.onsave.length) {
-      this.onsave[0]();
-      this.onsave.shift();
-    }
+    save();
+  } else {
+    clearTimeout(this.isDeferred);
+    this.isDeferred = setTimeout(save, 100);
   }
-
-  setTimeout(() => { this.isDeferred = false; }, 100);
 };
 
 export default Store;

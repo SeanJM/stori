@@ -600,32 +600,35 @@ Store.prototype.copy = function (obj) {
 };
 
 Store.prototype.save = function (callback) {
-  var _this = this;
+  var self = this;
+
+  function save() {
+    var paths = (0, _getPathList2.default)(self.value);
+    var i = -1;
+    var n = paths.length;
+
+    self.isDeferred = true;
+
+    while (++i < n) {
+      window.localStorage.setItem(paths[i].join("."), JSON.stringify((0, _get2.default)(self.value, paths[i])));
+    }
+
+    while (self.onsave.length) {
+      self.onsave[0]();
+      self.onsave.shift();
+    }
+  }
 
   if (callback) {
     this.onsave.push(callback);
   }
 
   if (!this.isDeferred) {
-    var paths = (0, _getPathList2.default)(this.value);
-    var i = -1;
-    var n = paths.length;
-
-    this.isDeferred = true;
-
-    while (++i < n) {
-      window.localStorage.setItem(paths[i].join("."), JSON.stringify((0, _get2.default)(this.value, paths[i])));
-    }
-
-    while (this.onsave.length) {
-      this.onsave[0]();
-      this.onsave.shift();
-    }
+    save();
+  } else {
+    clearTimeout(this.isDeferred);
+    this.isDeferred = setTimeout(save, 100);
   }
-
-  setTimeout(function () {
-    _this.isDeferred = false;
-  }, 100);
 };
 
 exports.default = Store;
