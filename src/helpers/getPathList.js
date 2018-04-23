@@ -28,5 +28,5 @@ function getKeyValues(paths, path, value) {
 export default function getPathList(object) {
   const paths = [];
   getKeyValues(paths, [], object);
-  return paths;
+  return paths.sort(function (a, b) { a.length - b.length; });
 }

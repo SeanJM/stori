@@ -25,19 +25,17 @@
     "url": "https://github.com/SeanJM/stori/issues"
   },
   "homepage": "https://github.com/SeanJM/stori#readme",
-  "dependencies": {
-    "babel-env": "^2.4.1"
-  },
   "devDependencies": {
+    "babel-env": "^2.4.1",
     "babel": "^6.23.0",
     "babel-cli": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "el-lite": "^1.25.2",
-    "eslint": "^4.13.1",
+    "babel-loader": "^7.1.4",
+    "el-lite": "^1.29.4",
+    "eslint": "^4.19.1",
     "eslint-plugin-dependencies": "^2.4.0",
-    "tiny-test": "^0.9.4",
-    "uglifyjs-webpack-plugin": "^1.1.4",
-    "webpack": "^3.10.0",
-    "webpack-node-externals": "^1.6.0"
+    "tiny-test": "^0.9.5",
+    "uglifyjs-webpack-plugin": "^1.2.5",
+    "webpack": "^3.11.0",
+    "webpack-node-externals": "^1.7.2"
   }
 }

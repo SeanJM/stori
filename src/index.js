@@ -2,7 +2,24 @@ import Bus         from "./class/Bus";
 import set         from "./helpers/set";
 import get         from "./helpers/get";
 import copy        from "./helpers/copy";
+import assign      from "./helpers/assign";
 import getPathList from "./helpers/getPathList";
+
+function shouldCopy(copyPaths, path) {
+  let i = 0;
+  let n = path.length + 1;
+  let p;
+
+  while (++i < n) {
+    p = path.slice(0, i).join(".");
+    if (copyPaths.indexOf(p) !== -1) {
+      return false;
+    }
+  }
+
+  copyPaths.push(p);
+  return true;
+}
 
 function Store(props) {
   const cache = {};
@@ -109,13 +126,21 @@ Store.prototype.triggerOnChange = function (paths) {
 };
 
 Store.prototype.set = function (object, callback) {
-  const paths    = getPathList(object);
-  const instance = copy(this.value);
-  let value;
+  const paths     = getPathList(object);
+  const instance  = assign({}, this.value);
+  const copyPaths = [];
 
-  for (var i = 0, n = paths.length; i < n; i++) {
-    value = get(object, paths[i]);
-    set(instance, paths[i], value);
+  let i = -1;
+  let n = paths.length;
+  let path;
+
+  while (++i < n) {
+    path  = paths[i].slice(0, Math.max(1, paths[i].length - 1));
+    if (shouldCopy(copyPaths, path)) {
+      set(instance, path, copy(get(instance, path)));
+    }
+    path  = paths[i];
+    set(instance, path, get(object, path));
   }
 
   this.value = instance;
@@ -127,10 +152,6 @@ Store.prototype.set = function (object, callback) {
 
 Store.prototype.get = function (path) {
   return get(this.value, [].concat(path).join("."));
-};
-
-Store.prototype.copy = function (obj) {
-  return copy(obj);
 };
 
 Store.prototype.save = function (callback) {
@@ -166,6 +187,14 @@ Store.prototype.save = function (callback) {
     clearTimeout(this.isDeferred);
     this.isDeferred = setTimeout(save, 100);
   }
+};
+
+Store.prototype.getPathList = function (obj) {
+  return getPathList(obj);
+};
+
+Store.prototype.copy = function (obj) {
+  return copy(obj);
 };
 
 export default Store;
