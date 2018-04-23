@@ -5,22 +5,6 @@ import copy        from "./helpers/copy";
 import assign      from "./helpers/assign";
 import getPathList from "./helpers/getPathList";
 
-function shouldCopy(copyPaths, path) {
-  let i = 0;
-  let n = path.length + 1;
-  let p;
-
-  while (++i < n) {
-    p = path.slice(0, i).join(".");
-    if (copyPaths.indexOf(p) !== -1) {
-      return false;
-    }
-  }
-
-  copyPaths.push(p);
-  return true;
-}
-
 function Store(props) {
   const cache = {};
   let stringifiedValue;
@@ -134,9 +118,25 @@ Store.prototype.set = function (object, callback) {
   let n = paths.length;
   let path;
 
+  function shouldCopy(path) {
+    let i = 0;
+    let n = path.length + 1;
+    let p;
+
+    while (++i < n) {
+      p = path.slice(0, i).join(".");
+      if (copyPaths.indexOf(p) !== -1) {
+        return false;
+      }
+    }
+
+    copyPaths.push(p);
+    return true;
+  }
+
   while (++i < n) {
     path  = paths[i].slice(0, Math.max(1, paths[i].length - 1));
-    if (shouldCopy(copyPaths, path)) {
+    if (shouldCopy(path)) {
       set(instance, path, copy(get(instance, path)));
     }
     path  = paths[i];

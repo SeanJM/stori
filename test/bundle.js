@@ -475,22 +475,6 @@ var _getPathList2 = _interopRequireDefault(_getPathList);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function shouldCopy(copyPaths, path) {
-  var i = 0;
-  var n = path.length + 1;
-  var p = void 0;
-
-  while (++i < n) {
-    p = path.slice(0, i).join(".");
-    if (copyPaths.indexOf(p) !== -1) {
-      return false;
-    }
-  }
-
-  copyPaths.push(p);
-  return true;
-}
-
 function Store(props) {
   var cache = {};
   var stringifiedValue = void 0;
@@ -604,9 +588,25 @@ Store.prototype.set = function (object, callback) {
   var n = paths.length;
   var path = void 0;
 
+  function shouldCopy(path) {
+    var i = 0;
+    var n = path.length + 1;
+    var p = void 0;
+
+    while (++i < n) {
+      p = path.slice(0, i).join(".");
+      if (copyPaths.indexOf(p) !== -1) {
+        return false;
+      }
+    }
+
+    copyPaths.push(p);
+    return true;
+  }
+
   while (++i < n) {
     path = paths[i].slice(0, Math.max(1, paths[i].length - 1));
-    if (shouldCopy(copyPaths, path)) {
+    if (shouldCopy(path)) {
       (0, _set2.default)(instance, path, (0, _copy2.default)((0, _get2.default)(instance, path)));
     }
     path = paths[i];
