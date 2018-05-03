@@ -21,9 +21,14 @@ function Store(props) {
   // Loads the localStorage object keys as properties of 'this'
   for (var path in window.localStorage) {
     stringifiedValue = window.localStorage.getItem(path);
-    if (stringifiedValue !== "undefined") {
-      value = JSON.parse(stringifiedValue);
-      set(cache, path, value);
+    if (stringifiedValue !== "undefined" && stringifiedValue !== "null") {
+      try {
+        value = JSON.parse(stringifiedValue);
+        set(cache, path, value);
+      } catch(e) {
+        value = stringifiedValue;
+        set(cache, path, value);
+      }
     }
   }
 
